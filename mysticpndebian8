@@ -39,13 +39,11 @@ sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 service ssh restart
 
 # set repo
-apt-get install apt-show-versions libapt-pkg-perl libauthen-pam-perl libio-pty-perl libnet-ssleay-perl
-wget https://prdownloads.sourceforge.net/webadmin/webmin_1.881_all.deb
+wget -O /etc/apt/sources.list "https://raw.githubusercontent.com/mysticvpn/openvpn/master/sources.list.debian8"
+wget "http://www.dotdeb.org/dotdeb.gpg"
+cat dotdeb.gpg | apt-key add -;rm dotdeb.gpg
+sh -c 'echo "deb http://download.webmin.com/download/repository sarge contrib" > /etc/apt/sources.list.d/webmin.list'
 wget -qO - http://www.webmin.com/jcameron-key.asc | apt-key add -
-apt-get update
-
-# update
-apt-get update
 
 # install webserver
 apt-get -y install nginx
@@ -115,7 +113,7 @@ service squid3 restart
 
 # install webmin
 cd
-dpkg -i webmin_1.881_all.deb
+apt-get -y install webmin
 sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
 service webmin restart
 
