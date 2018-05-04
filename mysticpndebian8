@@ -38,6 +38,9 @@ ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 service ssh restart
 
+# update
+apt-get update
+
 # install webserver
 apt-get -y install nginx
 
@@ -161,7 +164,6 @@ service openvpn restart
 service cron restart
 service ssh restart
 service squid3 restart
-service webmin restart
 rm -rf ~/.bash_history && history -c
 echo "unset HISTFILE" >> /etc/profile
 
