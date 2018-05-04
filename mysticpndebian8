@@ -1,10 +1,4 @@
 #!/bin/bash
-#
-# Original script by fornesia, rzengineer and fawzya
-# Mod by Bustami Arifin
-# Translation by _Dreyannz_
-# Edited by MysticVPN
-# ==================================================
 
 # Initializing Var
 export DEBIAN_FRONTEND=noninteractive
@@ -12,24 +6,11 @@ OS=`uname -m`;
 MYIP=$(wget -qO- ipv4.icanhazip.com);
 MYIP2="s/xxxxxxxxx/$MYIP/g";
 
-# Details of MysticVPN
-country=PH
-state=Manila
-locality=Manila
-organization=MysticVPN
-organizationalunit=MysticVPN
-commonname=MysticVPN
-email=mysticvpn@gmail.com
-
 # go to root
 cd
 
-# disable ipv6
-echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6
-sed -i '$ i\echo 1 > /proc/sys/net/ipv6/conf/all/disable_ipv6' /etc/rc.local
-
 # install wget and curl
-apt-get update;apt-get -y install wget curl;
+sudo apt-get update
 
 # set time GMT +7
 ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
@@ -38,41 +19,13 @@ ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
 sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
 service ssh restart
 
+# set repo
+wget -O /etc/apt/sources.list "https://raw.githubusercontent.com/mysticvpn/openvpn/master/sources.list.debian8"
+wget http://www.webmin.com/jcameron-key.asc
+sudo apt-key add jcameron-key.asc
+
 # update
-apt-get update
-
-# install webserver
-apt-get -y install nginx
-
-# install essential package
-apt-get -y install nano iptables dnsutils openvpn screen whois ngrep unzip unrar
-
-echo "clear" >> .bashrc
-echo 'echo -e ":::::::::  :::::::::: :::::::::  :::::::::::"' >> .bashrc
-echo 'echo -e ":+:    :+: :+:        :+:    :+: :+:     :+:"' >> .bashrc
-echo 'echo -e "+:+    +:+ +:+        +:+    +:+        +:+ "' >> .bashrc
-echo 'echo -e "+#+    +:+ +#++:++#   +#++:++#+        +#+  "' >> .bashrc
-echo 'echo -e "+#+    +#+ +#+        +#+    +#+      +#+   "' >> .bashrc
-echo 'echo -e "#+#    #+# #+#        #+#    #+#     #+#    "' >> .bashrc
-echo 'echo -e "#########  ########## #########      ###    "' >> .bashrc
-echo 'echo -e ""' >> .bashrc
-echo 'echo -e "Welcome to $HOSTNAME" server' >> .bashrc
-echo 'echo -e "Script Mod by Bustami Arifin"' >> .bashrc
-echo 'echo -e "Translation by _Dreyannz_"' >> .bashrc
-echo 'echo -e "Edited by MysticVPN"' >> .bashrc
-echo 'echo -e "For Commands, input menu"' >> .bashrc
-echo 'echo -e ""' >> .bashrc
-
-# install webserver
-cd
-rm /etc/nginx/sites-enabled/default
-rm /etc/nginx/sites-available/default
-wget -O /etc/nginx/nginx.conf "http://vira.cf/nginx.conf"
-mkdir -p /home/vps/public_html
-echo "<pre>Setup by Bustami Arifin</pre>" > /home/vps/public_html/index.html
-echo "<pre>MysticVPN - https://www.facebook.com/groups/mysticvpn</pre>" > /home/vps/public_html/index.html
-wget -O /etc/nginx/conf.d/vps.conf "https://raw.githubusercontent.com/mysticvpn/openvpn/master/vps.conf"
-service nginx restart
+sudo apt-get update
 
 # install openvpn
 wget -O /etc/openvpn/openvpn.tar "https://raw.githubusercontent.com/mysticvpn/openvpn/master/openvpn.tar"
@@ -102,10 +55,17 @@ service ssh restart
 
 # install squid3
 cd
-apt-get -y install squid3
-wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/mysticvpn/openvpn/master/squid3.conf"
-sed -i $MYIP2 /etc/squid3/squid.conf;
-service squid3 restart
+sudo apt-get install squid
+wget -O /etc/squid/squid.conf "https://raw.githubusercontent.com/mysticvpn/openvpn/master/squid3.conf"
+sed -i $MYIP2 /etc/squid/squid.conf;
+service squid restart
+
+# install webmin
+sudo apt-get update 
+cd
+sudo apt-get install webmin
+sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+service webmin restart
 
 END
 
@@ -175,8 +135,8 @@ apt-get install neofetch
 
 echo "deb http://dl.bintray.com/dawidd6/neofetch jessie main" | tee -a /etc/apt/sources.list
 curl "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"| apt-key add -
-apt-get update
-apt-get install neofetch
+sudo apt-get update
+sudo apt-get install neofetch
 
 # info
 clear
