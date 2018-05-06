@@ -1,30 +1,9 @@
 #!/bin/bash
 
-# Initializing Var
-export DEBIAN_FRONTEND=noninteractive
-OS=`uname -m`;
-MYIP=$(wget -qO- ipv4.icanhazip.com);
-MYIP2="s/xxxxxxxxx/$MYIP/g";
-
 # go to root
 cd
 
 # install wget and curl
-sudo apt-get update
-
-# set time GMT +7
-ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
-
-# set locale
-sed -i 's/AcceptEnv/#AcceptEnv/g' /etc/ssh/sshd_config
-service ssh restart
-
-# set repo
-wget -O /etc/apt/sources.list "https://raw.githubusercontent.com/mysticvpn/openvpn/master/sources.list.debian8"
-wget http://www.webmin.com/jcameron-key.asc
-sudo apt-key add jcameron-key.asc
-
-# update
 sudo apt-get update
 
 # install openvpn
@@ -47,12 +26,6 @@ wget -O /etc/openvpn/client.ovpn "https://raw.githubusercontent.com/mysticvpn/op
 sed -i $MYIP2 /etc/openvpn/client.ovpn;
 cp client.ovpn /home/vps/public_html/
 
-# setting port ssh
-cd
-sed -i 's/Port 22/Port 22/g' /etc/ssh/sshd_config
-sed -i '/Port 22/a Port 444' /etc/ssh/sshd_config
-service ssh restart
-
 # install squid3
 cd
 sudo apt-get install squid
@@ -61,26 +34,14 @@ sed -i $MYIP2 /etc/squid/squid.conf;
 service squid restart
 
 # install webmin
-sudo apt-get update 
 cd
-sudo apt-get install webmin
-sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
-service webmin restart
+sudo su -c 'echo "deb http://download.webmin.com/download/repository sarge contrib"> /etc/apt/sources.list.d/webmin.list'
+wget http://www.webmin.com/jcameron-key.asc
+sudo apt-key add jcameron-key.asc
+sudo apt update -y
+sudo apt install -y webmin
 
 END
-
-# install fail2ban
-apt-get -y install fail2ban;
-service fail2ban restart
-
-# install ddos deflate
-cd
-apt-get -y install dnsutils dsniff
-wget https://raw.githubusercontent.com/mysticvpn/openvpn/master/ddos-deflate-master.zip
-unzip ddos-deflate-master.zip
-cd ddos-deflate-master
-./install.sh
-rm -rf /root/ddos-deflate-master.zip
 
 # banner
 rm /etc/issue.net
@@ -88,103 +49,12 @@ wget -O /etc/issue.net "https://raw.githubusercontent.com/mysticvpn/openvpn/mast
 sed -i 's@#Banner@Banner@g' /etc/ssh/sshd_config
 service ssh restart
 
-# download script
-cd /usr/bin
-wget -O menu "https://raw.githubusercontent.com/mysticvpn/openvpn/master/menu.sh"
-wget -O add "https://raw.githubusercontent.com/mysticvpn/openvpn/master/usernew.sh"
-wget -O trial "https://raw.githubusercontent.com/mysticvpn/openvpn/master/trial.sh"
-wget -O remove "https://raw.githubusercontent.com/mysticvpn/openvpn/master/hapus.sh"
-wget -O check "https://raw.githubusercontent.com/mysticvpn/openvpn/master/user-login.sh"
-wget -O member "https://raw.githubusercontent.com/mysticvpn/openvpn/master/user-list.sh"
-wget -O banner "https://raw.githubusercontent.com/mysticvpn/openvpn/master/servermessage.sh"
-wget -O restart "https://raw.githubusercontent.com/mysticvpn/openvpn/master/resvis.sh"
-wget -O speedtest "https://raw.githubusercontent.com/mysticvpn/openvpn/master/speedtest_cli.py"
-wget -O info "https://raw.githubusercontent.com/mysticvpn/openvpn/master/info.sh"
-wget -O about "https://raw.githubusercontent.com/mysticvpn/openvpn/master/about.sh"
-
 echo "0 0 * * * root /sbin/reboot" > /etc/cron.d/reboot
-
-chmod +x menu
-chmod +x add
-chmod +x trial
-chmod +x remove
-chmod +x check
-chmod +x member
-chmod +x banner
-chmod +x restart
-chmod +x speedtest
-chmod +x info
-chmod +x about
 
 # finishing
 cd
-chown -R www-data:www-data /home/vps/public_html
-service nginx start
 service openvpn restart
 service cron restart
 service ssh restart
 service squid3 restart
-rm -rf ~/.bash_history && history -c
-echo "unset HISTFILE" >> /etc/profile
-
-# install neofetch
-echo "deb http://dl.bintray.com/dawidd6/neofetch jessie main" | tee -a /etc/apt/sources.list
-curl "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"| apt-key add -
-apt-get update
-apt-get install neofetch
-
-echo "deb http://dl.bintray.com/dawidd6/neofetch jessie main" | tee -a /etc/apt/sources.list
-curl "https://bintray.com/user/downloadSubjectPublicKey?username=bintray"| apt-key add -
-sudo apt-get update
-sudo apt-get install neofetch
-
-# info
-clear
-echo "Deb7AutoScriptVPS Includes:" | tee log-install.txt
-echo "===========================================" | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Service"  | tee -a log-install.txt
-echo "-------"  | tee -a log-install.txt
-echo "OpenSSH  : 22, 444"  | tee -a log-install.txt
-echo "Dropbear : 80, 553"  | tee -a log-install.txt
-echo "SSL      : 143"  | tee -a log-install.txt
-echo "Squid3   : 8000, 8080 (limit to IP SSH)"  | tee -a log-install.txt
-echo "OpenVPN  : TCP 1194 (client config : http://$MYIP:81/client.ovpn)"  | tee -a log-install.txt
-echo "badvpn   : badvpn-udpgw port 7300"  | tee -a log-install.txt
-echo "nginx    : 81"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Commands"  | tee -a log-install.txt
-echo "------"  | tee -a log-install.txt
-echo "menu       (Show Commands)"  | tee -a log-install.txt
-echo "add        (Create User Account)"  | tee -a log-install.txt
-echo "trial      (Create Trial Account)"  | tee -a log-install.txt
-echo "remove     (Remove User Account)"  | tee -a log-install.txt
-echo "check      (Check User Login)"  | tee -a log-install.txt
-echo "member     (Check Member)"  | tee -a log-install.txt
-echo "banner     (Configure Server Message)"  | tee -a log-install.txt
-echo "restart    (Restart Service Dropbear, Webmin,"  | tee -a log-install.txt
-echo "            Squid3, Openvpn and SSH)"  | tee -a log-install.txt
-echo "reboot     (Reboot VPS)"  | tee -a log-install.txt
-echo "speedtest  (Speedtest VPS)"  | tee -a log-install.txt
-echo "info       (System Information)"  | tee -a log-install.txt
-echo "about      (Debian AutoScript VPS Info)"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Other Features"  | tee -a log-install.txt
-echo "----------"  | tee -a log-install.txt
-echo "DDoS Deflate   : Anti-DDOS"  | tee -a log-install.txt
-echo "Webmin         : http://$MYIP:10000/"  | tee -a log-install.txt
-echo "Timezone       : Asia/Manila (GMT +7)"  | tee -a log-install.txt
-echo "IPv6           : [off]"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Original Script by Fornesia, Rzengineer & Fawzya"  | tee -a log-install.txt
-echo "Modified by Bustami Arifin"  | tee -a log-install.txt
-echo "Translation by _Dreyannz_"  | tee -a log-install.txt
-echo "Edited by MysticVPN"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Installation Logs --> /root/log-install.txt"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "VPS Auto Reboot at 12 AM"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "==========================================="  | tee -a log-install.txt
-cd
-rm -f /root/debian7.sh
+service webmin restart
