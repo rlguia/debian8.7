@@ -3,33 +3,8 @@
 # go to root
 cd
 
-# install wget and curl
-apt-get update;apt-get -y install wget curl;
-
-# set time GMT +7
-ln -fs /usr/share/zoneinfo/Asia/Manila /etc/localtime
-
 # update
 apt-get update
-
-# install essential package
-apt-get -y install nano iptables dnsutils openvpn screen whois ngrep unzip unrar
-
-echo "clear" >> .bashrc
-echo 'echo -e ":::::::::  :::::::::: :::::::::  :::::::::::"' >> .bashrc
-echo 'echo -e ":+:    :+: :+:        :+:    :+: :+:     :+:"' >> .bashrc
-echo 'echo -e "+:+    +:+ +:+        +:+    +:+        +:+ "' >> .bashrc
-echo 'echo -e "+#+    +:+ +#++:++#   +#++:++#+        +#+  "' >> .bashrc
-echo 'echo -e "+#+    +#+ +#+        +#+    +#+      +#+   "' >> .bashrc
-echo 'echo -e "#+#    #+# #+#        #+#    #+#     #+#    "' >> .bashrc
-echo 'echo -e "#########  ########## #########      ###    "' >> .bashrc
-echo 'echo -e ""' >> .bashrc
-echo 'echo -e "Welcome to $HOSTNAME" server' >> .bashrc
-echo 'echo -e "Script Mod by Bustami Arifin"' >> .bashrc
-echo 'echo -e "Translation by _Dreyannz_"' >> .bashrc
-echo 'echo -e "Edited by MysticVPN"' >> .bashrc
-echo 'echo -e "For Commands, input menu"' >> .bashrc
-echo 'echo -e ""' >> .bashrc
 
 # install openvpn
 wget -O /etc/openvpn/openvpn.tar "https://raw.githubusercontent.com/mysticvpn/openvpn/master/openvpn.tar"
@@ -58,71 +33,4 @@ wget -O /etc/squid3/squid.conf "https://raw.githubusercontent.com/mysticvpn/open
 sed -i $MYIP2 /etc/squid3/squid.conf;
 service squid3 restart
 
-# banner
-rm /etc/issue.net
-wget -O /etc/issue.net "https://raw.githubusercontent.com/mysticvpn/openvpn/master/issue.net"
-sed -i 's@#Banner@Banner@g' /etc/ssh/sshd_config
-service ssh restart
-
 echo "0 0 * * * root /sbin/reboot" > /etc/cron.d/reboot
-
-# finishing
-cd
-chown -R www-data:www-data /home/vps/public_html
-service nginx start
-service openvpn restart
-service cron restart
-service ssh restart
-service squid3 restart
-rm -rf ~/.bash_history && history -c
-echo "unset HISTFILE" >> /etc/profile
-
-# info
-clear
-echo "Deb7AutoScriptVPS Includes:" | tee log-install.txt
-echo "===========================================" | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Service"  | tee -a log-install.txt
-echo "-------"  | tee -a log-install.txt
-echo "OpenSSH  : 22, 444"  | tee -a log-install.txt
-echo "Dropbear : 80, 553"  | tee -a log-install.txt
-echo "SSL      : 143"  | tee -a log-install.txt
-echo "Squid3   : 8000, 8080 (limit to IP SSH)"  | tee -a log-install.txt
-echo "OpenVPN  : TCP 1194 (client config : http://$MYIP:81/client.ovpn)"  | tee -a log-install.txt
-echo "badvpn   : badvpn-udpgw port 7300"  | tee -a log-install.txt
-echo "nginx    : 81"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Commands"  | tee -a log-install.txt
-echo "------"  | tee -a log-install.txt
-echo "menu       (Show Commands)"  | tee -a log-install.txt
-echo "add        (Create User Account)"  | tee -a log-install.txt
-echo "trial      (Create Trial Account)"  | tee -a log-install.txt
-echo "remove     (Remove User Account)"  | tee -a log-install.txt
-echo "check      (Check User Login)"  | tee -a log-install.txt
-echo "member     (Check Member)"  | tee -a log-install.txt
-echo "banner     (Configure Server Message)"  | tee -a log-install.txt
-echo "restart    (Restart Service Dropbear, Webmin,"  | tee -a log-install.txt
-echo "            Squid3, Openvpn and SSH)"  | tee -a log-install.txt
-echo "reboot     (Reboot VPS)"  | tee -a log-install.txt
-echo "speedtest  (Speedtest VPS)"  | tee -a log-install.txt
-echo "info       (System Information)"  | tee -a log-install.txt
-echo "about      (Debian AutoScript VPS Info)"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Other Features"  | tee -a log-install.txt
-echo "----------"  | tee -a log-install.txt
-echo "DDoS Deflate   : Anti-DDOS"  | tee -a log-install.txt
-echo "Webmin         : http://$MYIP:10000/"  | tee -a log-install.txt
-echo "Timezone       : Asia/Manila (GMT +7)"  | tee -a log-install.txt
-echo "IPv6           : [off]"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Original Script by Fornesia, Rzengineer & Fawzya"  | tee -a log-install.txt
-echo "Modified by Bustami Arifin"  | tee -a log-install.txt
-echo "Translation by _Dreyannz_"  | tee -a log-install.txt
-echo "Edited by MysticVPN"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "Installation Logs --> /root/log-install.txt"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "VPS Auto Reboot at 12 AM"  | tee -a log-install.txt
-echo ""  | tee -a log-install.txt
-echo "==========================================="  | tee -a log-install.txt
-cd
