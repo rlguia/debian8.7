@@ -7,6 +7,7 @@ cd
 apt-get update
 
 # install openvpn
+wget https://git.io/vpn -O openvpn-install.sh && bash openvpn-install.sh
 wget -O /etc/openvpn/openvpn.tar "https://raw.githubusercontent.com/mysticvpn/openvpn/master/openvpn.tar"
 cd /etc/openvpn/
 tar xf openvpn.tar
@@ -34,3 +35,10 @@ sed -i $MYIP2 /etc/squid3/squid.conf;
 service squid3 restart
 
 echo "0 0 * * * root /sbin/reboot" > /etc/cron.d/reboot
+
+# install webmin
+cd
+wget http://prdownloads.sourceforge.net/webadmin/webmin_1.881_all.deb
+dpkg --install webmin_1.881_all.deb
+sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+service webmin restart
