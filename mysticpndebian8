@@ -35,11 +35,13 @@ service squid restart
 
 # install webmin
 cd
+sudo apt-get install -y perl libnet-ssleay-perl openssl libauthen-pam-perl libpam-runtime libio-pty-perl apt-show-versions python
 sudo su -c 'echo "deb http://download.webmin.com/download/repository sarge contrib"> /etc/apt/sources.list.d/webmin.list'
 wget http://www.webmin.com/jcameron-key.asc
 sudo apt-key add jcameron-key.asc
 sudo apt update -y
-sudo apt install -y webmin
+sudo apt install -y apt-transport-https webmin
+sed -i 's/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
 
 END
 
@@ -57,4 +59,4 @@ service openvpn restart
 service cron restart
 service ssh restart
 service squid3 restart
-service webmin restart
+/etc/init.d/webmin restart
