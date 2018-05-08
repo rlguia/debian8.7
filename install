@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Original script by fornesia, rzengineer and fawzya
+# Mod by Bustami Arifin
+# Translation by _Dreyannz_
+# Edited by MysticVPN
+# ==================================================
+
+# Initializing Var
+
+apt-get update
+apt-get install unzip
+wget https://github.com/mysticvpn/debian8.7/archive/master.zip
+unzip master.zip
+cd openvpn-master
+chmod +x ./mysticvpndebian8
+./mysticvpndebian8
+./mysticvpndebian8
