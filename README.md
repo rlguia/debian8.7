@@ -28,13 +28,13 @@ All you need to do is Copy and Paste the commands posted below to the console/te
 ### Commands
 
 ```
-wget https://raw.githubusercontent.com/mysticvpn/openvpn/master/mysticvpn
+wget https://raw.githubusercontent.com/mysticvpn/debian8.7/master/install
 ```
 ```
-chmod +x mysticvpn
+chmod +x install
 ```
 ```
-./mysticvpn
+./install
 ```
 
 ### FIX on Error: The certificate of `raw.githubusercontent.com' is not trusted.
