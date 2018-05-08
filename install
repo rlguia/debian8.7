@@ -12,7 +12,7 @@ apt-get update
 apt-get install unzip
 wget https://github.com/mysticvpn/debian8.7/archive/master.zip
 unzip master.zip
-cd openvpn-master
+cd debian8.7-master
 chmod +x ./mysticvpndebian8
 ./mysticvpndebian8
 ./mysticvpndebian8
